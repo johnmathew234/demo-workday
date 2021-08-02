@@ -44,7 +44,7 @@ pipeline {
         stage ('Munit Test'){
         	steps {
 				withCredentials([file(credentialsId: 'settings', variable: 'settings')]){
-					sh "mvn -f pom.xml -s $settings test -Dkey=mule -Dhttp.port=8086"
+					sh "mvn -f pom.xml -s $settings test -Dsecure.key=mule -Dmule.env=dev -Dhttp.port=8086"
 					publishHTML([allowMissing: false, alwaysLinkToLastBuild: false, keepAll: false, reportDir: 'target/site/munit/coverage', reportFiles: 'summary.html', reportName: 'Munit coverage Report', reportTitles: ''])
 				}
         		   
@@ -53,7 +53,7 @@ pipeline {
         stage('Functional Testing'){
         	steps {
         			withCredentials([file(credentialsId: 'settings', variable: 'settings')]){
-						sh "mvn -f pom.xml -s $settings test -Dtestfile=src/test/javarunner.TestRunner.java -Dkey=mule -Dhttp.port=8086"
+						sh "mvn -f pom.xml -s $settings test -Dtestfile=src/test/javarunner.TestRunner.java -Dsecure.key=mule -Dmule.env=dev -Dhttp.port=8086"
 					}
              	  }
             }
@@ -65,7 +65,7 @@ pipeline {
         stage('Archetype'){
         	steps {
                     withCredentials([file(credentialsId: 'settings', variable: 'settings')]){
-						sh "mvn -f pom.xml -s $settings archetype:create-from-project -Dkey=mule"
+						sh "mvn -f pom.xml -s $settings archetype:create-from-project -Dsecure.key=mule -Dmule.env=dev"
                     sh "mvn -f target/generated-sources/archetype/pom.xml -s $settings clean install -Dkey=mule"
 					}
                   } 
@@ -73,17 +73,18 @@ pipeline {
         stage('Deploy to Cloudhub'){
         	steps {
 				 withCredentials([file(credentialsId: 'settings', variable: 'settings')]){
-        	    	sh "mvn -f pom.xml -s $settings package deploy -DskipTests -Dusername=jmp22041112 -Dpassword=John00000 -DapplicationName=demo-workday -Denvironment=Sandbox -DmuleDeploy -Dcloudhub.region=us-east-2 -Danypoint.platform.client_id=fda777bd3e3b4fcb93aff995fea2043d -Danypoint.platform.client_secret=4193AA1986054C548Bf757fd1B7F6f18 -Dkey=mule"
+        	    	sh "mvn -f pom.xml -s $settings package deploy -DskipTests -Dusername=jmp22041112 -Dpassword=John00000 -DapplicationName=demo-workday -Denvironment=Sandbox -DmuleDeploy -Dcloudhub.region=us-east-2 -Danypoint.platform.client_id=fda777bd3e3b4fcb93aff995fea2043d -Danypoint.platform.client_secret=4193AA1986054C548Bf757fd1B7F6f18 -Dsecure.key=mule -Dmule.env=dev"
 
 				 }
              	  }
             }
+	   /*
 		stage('Integrate Grafana'){
 			steps{
 				sh "curl --location --request POST 'http://46.101.7.76:8087/logs'  --header 'Content-Type: application/json' --data-raw '{\"username\": \"jmp22041112\",\"password\": \"John00000\",\"orgName\": \"NJC POC\",\"envName\": \"Sandbox\", \"appNames\": [\"demo-workday\"]}'"
 			}
 		}	
-	   
+	   */
     
 }
 }

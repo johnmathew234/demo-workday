@@ -1,0 +1,25 @@
+api: 
+  groupId: "b0beec90-c6cc-4c36-8f7c-ef1f8f91253b"
+  artifactId: "apix-workday-sapi"
+  version: "1.0.0"
+  spec: "resource::${api.groupId}:${api.artifactId}:${api.version}:oas:zip:api.json"
+  majorVersion: "v1"
+  port: "8081"
+  id: ""
+  
+tls.keystore: 
+  type: "pkcs12"
+  path: "certs/apix-workday-sapi-dev.p12"
+  alias: "server"
+
+
+workdayMockRequest:
+
+ host:  "apiops-wdmock-sapi.us-e2.cloudhub.io"
+ absenceManagementPath : "/api/absenceManagement"
+ getWorkersPath : "/api/humanResources/getWorkers"
+ getCompenstionGradePath : "/api/compensation/getCompensationGradeById"
+ getJobProfiles : "/api/humanResources/getJobProfile"
+ getLocations : "/api/humanResources/getLocations"
+ 
+ 

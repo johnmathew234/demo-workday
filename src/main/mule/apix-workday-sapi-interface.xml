@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mule xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:apikit="http://www.mulesoft.org/schema/mule/mule-apikit" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns:json-logger="http://www.mulesoft.org/schema/mule/json-logger" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd http://www.mulesoft.org/schema/mule/mule-apikit http://www.mulesoft.org/schema/mule/mule-apikit/current/mule-apikit.xsd  http://www.mulesoft.org/schema/mule/json-logger http://www.mulesoft.org/schema/mule/json-logger/current/mule-json-logger.xsd">
+    <flow name="apix-workday-sapi-main">
+        <http:listener config-ref="${api.listenerConfig}" path="/api/*">
+            <http:response statusCode="#[vars.httpStatus default 200]">
+                <http:headers><![CDATA[#[vars.outboundHeaders default {}]]]></http:headers>
+            </http:response>
+            <http:error-response statusCode="#[vars.httpStatus default 500]">
+                <http:body><![CDATA[#[payload]]]></http:body>
+                <http:headers><![CDATA[#[vars.outboundHeaders default {}]]]></http:headers>
+            </http:error-response>
+        </http:listener>
+        <json-logger:logger doc:name="Logger" doc:id="25fe6f80-6890-4b65-bcbe-8470cadee7fa" message="request received to api" config-ref="jsonLoggerConfig" />
+        <apikit:router config-ref="apixWorkdaySapiConfig" />
+        <error-handler ref="common-error-handler" />
+    </flow>
+    <flow name="apix-workday-sapi-console">
+        <http:listener config-ref="${api.listenerConfig}" path="/console/*">
+            <http:response statusCode="#[vars.httpStatus default 200]">
+                <http:headers><![CDATA[#[vars.outboundHeaders default {}]]]></http:headers>
+            </http:response>
+            <http:error-response statusCode="#[vars.httpStatus default 500]">
+                <http:body><![CDATA[#[payload]]]></http:body>
+                <http:headers><![CDATA[#[vars.outboundHeaders default {}]]]></http:headers>
+            </http:error-response>
+        </http:listener>
+        <apikit:console config-ref="apixWorkdaySapiConfig" />
+        <error-handler ref="common-error-handler" />
+    </flow>
+    <flow name="get:\absenceManagement:apixWorkdaySapiConfig">
+        <flow-ref doc:name="getAbsenceManagement" doc:id="4cb77a6a-3d0f-43df-adab-24a071ba3e0c" name="get-absence-management" />
+    </flow>
+    <flow name="get:\compensation\getCompensationGradeById:apixWorkdaySapiConfig">
+        <flow-ref doc:name="getCompensationGradeById" doc:id="4a494d1f-8f8a-4e34-a406-0b150c76c96a" name="get-compensation-grade-by-id" />
+    </flow>
+    <flow name="get:\humanResources\getJobProfile:apixWorkdaySapiConfig">
+        <flow-ref doc:name="getJobProfiles" doc:id="c57c4f29-65a1-4446-82ec-f72178b8e7a0" name="get-job-profiles" />
+    </flow>
+    <flow name="get:\humanResources\getLocations:apixWorkdaySapiConfig">
+        <flow-ref doc:name="getLocations" doc:id="b423a5e7-653c-4279-a38d-b11dd58be26d" name="get-locations" />
+    </flow>
+    <flow name="get:\humanResources\getWorkers:apixWorkdaySapiConfig">
+        <flow-ref doc:name="getWorkers" doc:id="3efb1b69-9b8b-414b-bb6e-203806436859" name="get-workers" />
+    </flow>
+</mule>

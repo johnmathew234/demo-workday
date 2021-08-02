@@ -1,0 +1,16 @@
+json:
+
+  logger.application.name : "apix-workday-sapi"
+  logger.application.version : "1.0.0-SNAPSHOT"
+  
+api: 
+  groupId: "b0beec90-c6cc-4c36-8f7c-ef1f8f91253b"
+  artifactId: "apix-workday-sapi"
+  version: "1.0.2"
+  spec: "resource::${api.groupId}:${api.artifactId}:${api.version}:oas:zip:api.json"
+  majorVersion: "v1"
+  port: "8082"
+  listenerConfig: "apiHttpListenerConfig"  
+
+mule:
+  env: "dev"
